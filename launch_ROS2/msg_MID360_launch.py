@@ -39,10 +39,35 @@ def generate_launch_description():
         name='livox_lidar_publisher',
         output='screen',
         parameters=livox_ros2_params
-        )
+    )
+
+    livox_to_xyzirt = Node(
+        package='livox_ros_driver2',
+        executable='livox_to_xyzirt',
+        name='livox_to_xyzirt',
+        output='screen',
+        remappings=[
+            ('livox/lidar', '/livox/lidar'),
+            ('livox/lidar_xyzirt', '/livox/lidar_xyzirt'),
+        ],
+    )
+
+    cloud_accumulator = Node(
+        package='livox_ros_driver2',
+        executable='lidar_acumulator',
+        name='cloud_accumulator',
+        output='screen',
+        parameters=[{
+            'input_topic':  '/livox/lidar_xyzirt',
+            'output_topic': '/livox/lidar_accumulated',
+            'frames': 4,
+        }]
+    )
 
     return LaunchDescription([
         livox_driver,
+        livox_to_xyzirt,
+        cloud_accumulator,
         # launch.actions.RegisterEventHandler(
         #     event_handler=launch.event_handlers.OnProcessExit(
         #         target_action=livox_rviz,

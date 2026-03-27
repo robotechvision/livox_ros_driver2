@@ -330,6 +330,14 @@ else(ROS_EDITION STREQUAL "ROS2")
     ament_lint_auto_find_test_dependencies()
   endif()
 
+  add_executable(livox_to_xyzirt src/livox_to_xyzirt.cpp)
+  ament_target_dependencies(livox_to_xyzirt rclcpp sensor_msgs)
+  install(TARGETS livox_to_xyzirt DESTINATION lib/${PROJECT_NAME})
+
+  add_executable(lidar_acumulator src/lidar_acumulator.cpp)
+  ament_target_dependencies(lidar_acumulator rclcpp sensor_msgs)
+  install(TARGETS lidar_acumulator DESTINATION lib/${PROJECT_NAME})
+
   ament_auto_package(INSTALL_TO_SHARE
     config
     launch_ROS2
